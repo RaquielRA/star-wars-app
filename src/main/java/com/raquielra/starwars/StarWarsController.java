@@ -13,6 +13,11 @@ public class StarWarsController {
         this.service = service;
     }
 
+    @GetMapping("/")
+    public String welcomeMessage() {
+        return "Bem-vindo à Star Wars API! Use /api/filmes/search?title=...";
+    }
+
     @GetMapping("/api/filme/search")
     public Object searchFilms(@RequestParam(required = true) String title) {
         return service.searchFilmsByTitle(title);
