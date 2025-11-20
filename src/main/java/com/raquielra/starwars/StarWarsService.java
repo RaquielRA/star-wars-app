@@ -2,40 +2,38 @@ package com.raquielra.starwars;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.client.HttpClientErrorException; // Importa para tratar erros comuns de API
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
 @Service
 public class StarWarsService {
 
     private final RestTemplate restTemplate;
-    private static final String API_BASE_URL = "https://swapi.dev/api/films/{id}/";
+    private static final String API_BASE_URL = "https://swapi.dev/api/films/?search={title}";
 
     public StarWarsService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public StarWarsFilm fetchFilmById(int id) {
-        System.out.println("🚀 Buscando filme de Star Wars ID: " + id);
+    public Object searchFilmsByTitle(String title) {
+        System.out.println("🚀 Buscando filme de Star Wars com o termo: " + title);
         
         try {
-            StarWarsFilm film = restTemplate.getForObject(
+            Object response = restTemplate.getForObject(
                 API_BASE_URL, 
-                StarWarsFilm.class, 
-                id
+                Object.class, 
+                title
             );
             
-            System.out.println("✅ Filme recebido e convertido.");
-            return film;
+            System.out.println("✅ Lista de filmes recebida.");
+            return response;
             
         } catch (HttpClientErrorException e) {
-            // Trata erros comuns do lado do cliente (códigos 4xx, como 404 Not Found)
             System.err.println("❌ Erro ao consumir a API (Cliente/4xx). Status: " + e.getStatusCode());
             System.err.println("Corpo da Resposta de Erro: " + e.getResponseBodyAsString());
             return null;
-        } catch (Exception e) {
-            // Trata erros de conexão, servidor (códigos 5xx) ou outros erros inesperados
-            System.err.println("❌ Erro inesperado ao consumir a SWAPI: " + e.getMessage());
-            // e.printStackTrace(); // Útil para debug
+        } catch (ResourceAccessException e) {
+            System.err.println("❌ Erro de Conexão ou Rede: " + e.getMessage());
             return null;
         }
     }

@@ -1,7 +1,7 @@
 package com.raquielra.starwars;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -13,8 +13,8 @@ public class StarWarsController {
         this.service = service;
     }
 
-    @GetMapping("/api/filme/{id}")
-    public StarWarsFilm getFilmById(@PathVariable int id) {
-        return service.fetchFilmById(id);
+    @GetMapping("/api/filme/search")
+    public Object searchFilms(@RequestParam(required = true) String title) {
+        return service.searchFilmsByTitle(title);
     }
 }
