@@ -1,6 +1,8 @@
 target/
-*.log
+.mvn/wrapper
 .vscode
 .idea
+*.iml
+*.log
 .DS_Store
 Thumbs.db
